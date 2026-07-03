@@ -2,9 +2,9 @@ import e from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
-import users from "users.js";
-import guests from "guests.js";
-import weddings from "weddings.js"
+import users from "./users.js";
+import guests from "./guests.js";
+import weddings from "./weddings.js"
 
 
 dotenv.config();
