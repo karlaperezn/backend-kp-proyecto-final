@@ -18,7 +18,8 @@ router.post("/register-response", async (req, res) => {
         email,
         attending,
         food_allergy_intolerance,
-        message
+        message,
+        createdAt: new Date(),
     })
 
     res.send({data: newUser, mensaje: 'Respuesta enviada'})

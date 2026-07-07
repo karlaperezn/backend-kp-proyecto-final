@@ -12,6 +12,7 @@ router.post('/new-wedding', async (req, res) => {
         reception,
         design,
     } = req.body;
+    const now = new Date();
     
 
     let weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
@@ -27,7 +28,8 @@ router.post('/new-wedding', async (req, res) => {
 
         design,
 
-        timestamps: true 
+        createdAt: now,
+        updatedAt: now
     })
 
     res.send({ data: weddingAdded, mensaje: 'Evento creado' })
