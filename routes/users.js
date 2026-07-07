@@ -55,38 +55,30 @@ router.post("/register-user", async (req, res) => {
 //////////////
 
 router.post('/login', async (req, res) => {
-    const {
-        email,
-        password
-    } = req.body
+    const { email, password } = req.body;
 
     let message;
-    let state;
+    let status;
 
     let verifiedUser = await req.app.locals.db
-    .collection("users")
-    .findOne({ email });
+        .collection("users")
+        .findOne({ email });
 
     if (!email || !password) {
-        message = 'Correo y constraseña son obligatorios para ingresar.'
-        state = false;
+        message = 'Correo y contraseña son obligatorios para ingresar.';
+        status = false;
     } else {
-        const passwordMatch = verifiedUser ?
-        await bcrypt.compare(
-            password, verifiedUser.passwordHash
-        )
-        : false
+        const passwordMatch = verifiedUser
+            ? await bcrypt.compare(password, verifiedUser.passwordHash)
+            : false;
 
-        ({state, message}) =
-        verifiedUser && passwordMatch
-        ? {state: true, message: 'Usuario verificado'}
-        : {state: false, message: 'credenciales incorrectas'}
+        ({ status, message } = verifiedUser && passwordMatch
+            ? { status: true, message: 'Usuario verificado' }
+            : { status: false, message: 'credenciales incorrectas' });
     }
 
-    res.send({ state, message, verifiedUser})
-
-
-})
+    res.send({ status, message, verifiedUser });
+});
 
 
 export default router;
