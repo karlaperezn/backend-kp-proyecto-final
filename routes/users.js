@@ -15,13 +15,16 @@ router.post("/register-user", async (req, res) => {
 
     let message = "";
     let newUser;
+    let status;
 
     if (!fullName || !email || !password) {
         message = "Todos los campos son obligatorios.";
+        status = false;
     } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             message = "Formato de correo inválido.";
+            status = false;
         } else {
             const emailExist = await req.app.locals.db
                 .collection("users")
@@ -29,6 +32,7 @@ router.post("/register-user", async (req, res) => {
 
             if (emailExist) {
                 message = 'Ya existe una cuenta con este correo.';
+                status = false;
             } else {
                 const saltRounds = 12;
                 const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -41,14 +45,14 @@ router.post("/register-user", async (req, res) => {
                     createdAt: now,
                     updatedAt: now
                 });
-
+                status = true
                 message = 'Usuario registrado';
             }
         }
     }
 
 
-    res.send({ data: newUser, message })
+    res.send({ data: newUser, message, status })
 })
 
 
@@ -59,6 +63,7 @@ router.post('/login', async (req, res) => {
 
     let message;
     let status;
+    let dataUser;
 
     let verifiedUser = await req.app.locals.db
         .collection("users")
@@ -71,13 +76,24 @@ router.post('/login', async (req, res) => {
         const passwordMatch = verifiedUser
             ? await bcrypt.compare(password, verifiedUser.passwordHash)
             : false;
+        
+            if (verifiedUser && passwordMatch) {
+                status = true;
+                message = 'Ususuario verificado';
 
-        ({ status, message } = verifiedUser && passwordMatch
-            ? { status: true, message: 'Usuario verificado' }
-            : { status: false, message: 'credenciales incorrectas' });
+                dataUser = {
+                    _id: verifiedUser._id,
+                    fullName: verifiedUser.fullName,
+                    email: verifiedUser.email
+                }
+            } else {
+                status = false;
+                message = 'Credenciales incorrectas';
+            }
+
     }
 
-    res.send({ status, message, verifiedUser });
+    res.send({ status, message, user: dataUser });
 });
 
 
