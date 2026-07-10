@@ -1,18 +1,14 @@
 import { Router } from "express";
+import { ObjectId } from "mongodb";
 
 const router = Router();
 
 router.get('/my-weddings/:userId', async (req, res) => {
     const userId = req.params.userId
 
-    const weddingsByMe = await req.app.locals.db.collection('weddings').find({ownerId: userId}).toArray();
+    const weddingsByMe = await req.app.locals.db.collection('weddings').find({ ownerId: new ObjectId(userId) }).toArray();
 
-    const allCollabs = await req.app.locals.db.collection('collabs').find({userId}).toArray()
-    const idWeddingCollabs = allCollabs.map(collab => collab.weddingId)
-    const weddingsCollabs = await req.app.locals.db.collection('weddings').find({_id: {$in: idWeddingsCollabs}}).toArray
-
-
-    res.send({ weddingByMe,  weddingsCollabs})
+    res.send({ weddingsByMe })
 })
 
 router.post('/new-wedding', async (req, res) => {
@@ -26,11 +22,11 @@ router.post('/new-wedding', async (req, res) => {
         design,
     } = req.body;
     const now = new Date();
-    
+
 
     let weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
-        ownerId,
-        slug: `boda-${brideName}-&-${groomName}-${eventDate}`,
+        ownerId: new ObjectId(ownerId),
+        slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/\s+/g, '-'),
 
         brideName,
         groomName,
