@@ -1,28 +1,46 @@
 import { Router } from "express";
+import { ObjectId } from "mongodb";
 
 const router = Router();
 
 router.post("/register-response", async (req, res) => {
     const {
-        numberId,
+        weddingId,
         fullName,
-        email,
         attending,
-        food_allergy_intolerance,
-        message
+        dietaryRestrictions,
+        guestMessage
     } = req.body
 
-    let guestResponse = await req.app.locals.db.collection('guests').insertOne({
-        numberId,
-        fullName,
-        email,
-        attending,
-        food_allergy_intolerance,
-        message,
-        createdAt: new Date(),
-    })
+    let message;
+    let status;
+    let guestResponse;
 
-    res.send({data: newUser, mensaje: 'Respuesta enviada'})
+    if (!weddingId || !fullName || attending == null) { 
+        message = 'Faltan datos obligatorios';
+        status = false;
+    } else {
+        try {
+            guestResponse = await req.app.locals.db.collection('guests').insertOne({
+                weddingId: new ObjectId(weddingId),
+                fullName,
+                attending,
+                dietaryRestrictions,
+                guestMessage,
+                responseAt: new Date(),
+            })
+            message = '¡Confirmación recibida!';
+            status = true;
+
+
+        } catch(error) {
+            message = 'Error al guardar la confirmación. Inténtalo de nuevo.';
+            status = false;
+        }
+
+    }
+
+    res.send({guestResponse, message, status})
 })
 
 
