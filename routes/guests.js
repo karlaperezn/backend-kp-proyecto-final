@@ -3,6 +3,16 @@ import { ObjectId } from "mongodb";
 
 const router = Router();
 
+router.get("/show-responses/:weddingId", async (req, res) => {
+    const weddingId = new ObjectId(req.params.weddingId)
+
+    const guestsResponses = await req.app.locals.db.collection('guests').find({ weddingId }).toArray()
+
+
+    res.send({ guestsResponses })
+
+})
+
 router.post("/register-response", async (req, res) => {
     const {
         weddingId,
@@ -16,7 +26,7 @@ router.post("/register-response", async (req, res) => {
     let status;
     let guestResponse;
 
-    if (!weddingId || !fullName || attending == null) { 
+    if (!weddingId || !fullName || attending == null) {
         message = 'Faltan datos obligatorios';
         status = false;
     } else {
@@ -33,14 +43,14 @@ router.post("/register-response", async (req, res) => {
             status = true;
 
 
-        } catch(error) {
+        } catch (error) {
             message = 'Error al guardar la confirmación. Inténtalo de nuevo.';
             status = false;
         }
 
     }
 
-    res.send({guestResponse, message, status})
+    res.send({ guestResponse, message, status })
 })
 
 
