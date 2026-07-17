@@ -43,7 +43,7 @@ router.post('/new-wedding', async (req, res) => {
 
     let status;
     let message;
-    let weddingAdded = null;
+    let weddingAdded;
 
     try {
         weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
@@ -72,6 +72,28 @@ router.post('/new-wedding', async (req, res) => {
     }
 
     res.send({ data: weddingAdded, status, message })
+})
+
+
+//web invitados
+router.get('/:weddingSlug', async (req, res) => {
+    const weddingSlug = req.params.weddingSlug;
+
+    let status;
+    let message;
+    let wedding;
+
+    try {
+        wedding = await req.app.locals.db.collection('weddings').findOne({ slug: weddingSlug });
+        status = true;
+        message = `Boda de ${wedding.brideName} y ${wedding.groomName}`
+    } catch (error) {
+        status = false;
+        message = "Esta web no existe"
+    }
+
+    res.send({wedding, status, message})
+
 })
 
 export default router;
