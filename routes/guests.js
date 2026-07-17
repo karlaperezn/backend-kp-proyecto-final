@@ -17,6 +17,7 @@ router.post("/register-response", async (req, res) => {
     const {
         weddingId,
         fullName,
+        email,
         attending,
         dietaryRestrictions,
         guestMessage
@@ -34,6 +35,7 @@ router.post("/register-response", async (req, res) => {
             guestResponse = await req.app.locals.db.collection('guests').insertOne({
                 weddingId: new ObjectId(weddingId),
                 fullName,
+                email,
                 attending,
                 dietaryRestrictions,
                 guestMessage,

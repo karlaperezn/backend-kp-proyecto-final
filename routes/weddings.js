@@ -41,25 +41,37 @@ router.post('/new-wedding', async (req, res) => {
     } = req.body;
     const now = new Date();
 
+    let status;
+    let message;
+    let weddingAdded = null;
 
-    let weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
-        ownerId: new ObjectId(ownerId),
-        slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/\s+/g, '-'),
+    try {
+        weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
+            ownerId: new ObjectId(ownerId),
+            slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/\s+/g, '-'),
 
-        brideName,
-        groomName,
-        eventDate,
+            brideName,
+            groomName,
+            eventDate,
 
-        ceremony,
-        reception,
+            ceremony,
+            reception,
 
-        design,
+            design,
 
-        createdAt: now,
-        updatedAt: now
-    })
+            createdAt: now,
+            updatedAt: now
+        })
 
-    res.send({ data: weddingAdded, mensaje: 'Evento creado' })
+        status = true;
+        message = 'Evento creado';
+
+    } catch (error) {
+        status = false;
+        message = 'Error al crear el evento. Inténtalo de nuevo.';
+    }
+
+    res.send({ data: weddingAdded, status, message })
 })
 
 export default router;
