@@ -17,6 +17,7 @@ router.get("/show-responses/:weddingId", async (req, res) => {
         message = 'Respuestas encontradas';
 
     } catch (error) {
+        console.error(error);
         status = false;
         message = 'ID de boda inválido';
     }
@@ -57,6 +58,7 @@ router.post("/register-response", async (req, res) => {
 
 
         } catch (error) {
+            console.error(error);
             message = 'Error al guardar la confirmación. Inténtalo de nuevo.';
             status = false;
         }

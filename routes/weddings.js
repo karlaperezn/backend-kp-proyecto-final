@@ -68,6 +68,7 @@ router.post('/new-wedding', async (req, res) => {
         message = 'Evento creado';
 
     } catch (error) {
+        console.error(error);
         status = false;
         message = 'Error al crear el evento. Inténtalo de nuevo.';
     }
@@ -89,6 +90,7 @@ router.get('/show-invite/:weddingSlug', async (req, res) => {
         status = true;
         message = `Boda de ${wedding.brideName} y ${wedding.groomName}`
     } catch (error) {
+        console.error(error);
         status = false;
         message = "Esta web no existe"
     }
@@ -110,6 +112,7 @@ router.get('/preview/:weddingId', async (req, res) => {
         status = true;
         message = `Boda de ${wedding.brideName} y ${wedding.groomName}`
     } catch (error) {
+        console.error(error);
         status = false;
         message = "Esta web no existe"
     }
@@ -156,6 +159,7 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
             message = 'Web RSVP actualizada';
 
         } catch (error) {
+            console.error(error);
             status = false;
             message = 'Error al actualizar la web RSVP';
         }
