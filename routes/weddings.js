@@ -77,7 +77,7 @@ router.post('/new-wedding', async (req, res) => {
 
 
 //mostrar web rsvp
-router.get('/:weddingSlug', async (req, res) => {
+router.get('/show-invite/:weddingSlug', async (req, res) => {
     const weddingSlug = req.params.weddingSlug;
 
     let status;

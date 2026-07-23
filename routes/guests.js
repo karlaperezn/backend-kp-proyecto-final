@@ -4,14 +4,25 @@ import { ObjectId } from "mongodb";
 const router = Router();
 
 router.get("/show-responses/:weddingId", async (req, res) => {
-    const weddingId = new ObjectId(req.params.weddingId)
+    const weddingId = req.params.weddingId;
 
-    const guestsResponses = await req.app.locals.db.collection('guests').find({ weddingId }).toArray()
+    let status;
+    let message;
+    let guestsResponses = [];
 
+    try {
+        guestsResponses = await req.app.locals.db.collection('guests')
+            .find({ weddingId: new ObjectId(weddingId) }).toArray();
+        status = true;
+        message = 'Respuestas encontradas';
 
-    res.send({ guestsResponses })
+    } catch (error) {
+        status = false;
+        message = 'ID de boda inválido';
+    }
 
-})
+    res.send({ guestsResponses, status, message });
+});
 
 router.post("/register-response", async (req, res) => {
     const {
