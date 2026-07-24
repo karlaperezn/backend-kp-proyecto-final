@@ -168,4 +168,42 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
     res.send({ data: weddingUpdated, status, message });
 })
 
+router.delete('/delete-wedding/:weddingId', async (req, res) => {
+    const weddingId = req.params.weddingId
+
+    let message;
+    let status;
+
+    if (!weddingId) {
+        status = false;
+        message = "El id de la invitación no es válido";
+    }
+
+    try {
+        const weddingExists = await req.app.locals.db.collection('weddings').findOne({ _id: new ObjectId(weddingId) });
+
+        if (!weddingExists) {
+            status = false;
+            message = "Esta invitación no existe o ya fue eliminada"
+        } else {
+            const deletedWedding = await req.app.locals.db.collection('weddings').deleteOne({ _id: new ObjectId(weddingId) });
+    
+            if (deletedWedding && deletedWedding.deletedCount > 0) {
+                message = "Invitación eliminada con éxito";
+                status = true;
+            } else {
+                message = "No se pudo completar la eliminación";
+                status = false;
+            }
+        }
+
+    } catch (error) {
+        console.error(error)
+        status = false;
+        message = 'Error en el servidor al intentar eliminar la invitación';
+    }
+
+    res.send({ status, message })
+})
+
 export default router;
