@@ -176,6 +176,7 @@ router.put('/update-user/:userId', async (req, res) => {
     res.send({ updateData, status, message });
 });
 
+router.delete('/delete-account/:userId', )
 
 
 
