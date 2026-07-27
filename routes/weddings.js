@@ -32,29 +32,30 @@ router.get('/my-weddings/:userId', async (req, res) => {
 //crear web rsvp
 router.post('/new-wedding', async (req, res) => {
     const {
-        ownerId, brideName, groomName, eventDate, ceremony, reception, design } = req.body;
+        ownerId, brideName, groomName, eventDate, ceremony, reception,design,
+    } = req.body;
     const now = new Date();
 
     let status;
     let message;
     let weddingAdded;
 
-    const bride = (brideName || "").trim();
-    const groom = (groomName || "").trim();
+    /* const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim(); */
     let finalSlug = 'nombre-novia-y-nombre-novio'
 
-    if (bride || groom) {
+    /* if (bride || groom ) {
         finalSlug = [bride, groom]
-            .filter(Boolean)
-            .join("-y-")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-')
-            .replace(/^-+|-+$/g, '');
-    }
+        .filter(Boolean)
+        .join("-y-")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    } */
 
     try {
         weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
@@ -138,22 +139,22 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
     const { userId, brideName, groomName, eventDate, ceremony, reception, design } = req.body;
     console.log('userId recibido:', userId);
 
-    const bride = (brideName || "").trim();
-    const groom = (groomName || "").trim();
+    /* const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim(); */
     let finalSlug = 'nombre-novia-y-nombre-novio'
 
-    if (bride || groom) {
+    /* if (bride || groom ) {
         finalSlug = [bride, groom]
-            .filter(Boolean)
-            .join("-y-")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-')
-            .replace(/^-+|-+$/g, '');
-    }
+        .filter(Boolean)
+        .join("-y-")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    } */
 
     let status;
     let message;
