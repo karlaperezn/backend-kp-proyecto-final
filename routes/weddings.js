@@ -32,14 +32,7 @@ router.get('/my-weddings/:userId', async (req, res) => {
 //crear web rsvp
 router.post('/new-wedding', async (req, res) => {
     const {
-        ownerId,
-        brideName,
-        groomName,
-        eventDate,
-        ceremony,
-        reception,
-        design,
-    } = req.body;
+        ownerId, brideName, groomName, eventDate, ceremony, reception, design } = req.body;
     const now = new Date();
 
     let status;
@@ -50,14 +43,17 @@ router.post('/new-wedding', async (req, res) => {
     const groom = (groomName || "").trim();
     let finalSlug = 'nombre-novia-y-nombre-novio'
 
-    if (bride || groom ) {
-        finalSlug = `${bride}-y-${groom}`
-        .toLowerCase()
-        .replace(/ñ/g, "n")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-_]/g, '');
+    if (bride || groom) {
+        finalSlug = [bride, groom]
+            .filter(Boolean)
+            .join("-y-")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 
     try {
@@ -146,14 +142,17 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
     const groom = (groomName || "").trim();
     let finalSlug = 'nombre-novia-y-nombre-novio'
 
-    if (bride || groom ) {
-        finalSlug = `${bride}-y-${groom}`
-        .toLowerCase()
-        .replace(/ñ/g, "n")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-_]/g, '');
+    if (bride || groom) {
+        finalSlug = [bride, groom]
+            .filter(Boolean)
+            .join("-y-")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 
     let status;
