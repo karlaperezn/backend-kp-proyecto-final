@@ -49,13 +49,7 @@ router.post('/new-wedding', async (req, res) => {
     try {
         weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
             ownerId: new ObjectId(ownerId),
-            slug: `${brideName}-y-${groomName}`
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/ñ/g, "n")
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-_]/g, ''),
+            slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/ñ/g, "n").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''),
 
             brideName,
             groomName,
@@ -149,13 +143,7 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
                 { _id: new ObjectId(weddingId) },
                 {
                     $set: {
-                        slug: `${brideName}-y-${groomName}`
-                            .toLowerCase()
-                            .normalize("NFD")
-                            .replace(/[\u0300-\u036f]/g, "")
-                            .replace(/ñ/g, "n")
-                            .replace(/\s+/g, '-')
-                            .replace(/[^a-z0-9-_]/g, ''),
+                        slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/ñ/g, "n").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''),
                         brideName,
                         groomName,
                         eventDate,
