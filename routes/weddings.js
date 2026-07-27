@@ -42,9 +42,9 @@ router.post('/new-wedding', async (req, res) => {
 
     const bride = (brideName || "").trim();
     const groom = (groomName || "").trim();
-    let finalSlug = `${bride}-y-${groom}`
+    let finalSlug = `nombre-novia-y-nombre-novio`
 
-    /* if (bride || groom ) {
+    if (bride || groom ) {
         finalSlug = [bride, groom]
         .filter(Boolean)
         .join("-y-")
@@ -55,7 +55,7 @@ router.post('/new-wedding', async (req, res) => {
         .replace(/[^a-z0-9-]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-+|-+$/g, '');
-    } */
+    }
 
     try {
         weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
@@ -141,9 +141,9 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
 
     const bride = (brideName || "").trim();
     const groom = (groomName || "").trim();
-    let finalSlug = `${bride}-y-${groom}`
+    let finalSlug = `nombre-novia-y-nombre-novio`
 
-    /* if (bride || groom ) {
+    if (bride || groom ) {
         finalSlug = [bride, groom]
         .filter(Boolean)
         .join("-y-")
@@ -154,7 +154,7 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
         .replace(/[^a-z0-9-]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-+|-+$/g, '');
-    } */
+    }
 
     let status;
     let message;
