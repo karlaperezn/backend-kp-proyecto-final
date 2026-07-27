@@ -40,9 +40,9 @@ router.post('/new-wedding', async (req, res) => {
     let message;
     let weddingAdded;
 
-    /* const bride = (brideName || "").trim();
-    const groom = (groomName || "").trim(); */
-    let finalSlug = 'nombre-novia-y-nombre-novio'
+    const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim();
+    let finalSlug = `${bride}-y-${groom}`
 
     /* if (bride || groom ) {
         finalSlug = [bride, groom]
@@ -139,9 +139,9 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
     const { userId, brideName, groomName, eventDate, ceremony, reception, design } = req.body;
     console.log('userId recibido:', userId);
 
-    /* const bride = (brideName || "").trim();
-    const groom = (groomName || "").trim(); */
-    let finalSlug = 'nombre-novia-y-nombre-novio'
+    const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim();
+    let finalSlug = `${bride}-y-${groom}`
 
     /* if (bride || groom ) {
         finalSlug = [bride, groom]
