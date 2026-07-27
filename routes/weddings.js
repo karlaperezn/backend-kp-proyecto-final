@@ -46,10 +46,24 @@ router.post('/new-wedding', async (req, res) => {
     let message;
     let weddingAdded;
 
+    const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim();
+    let finalSlug = 'nombre-novia-y-nombre-novio'
+
+    if (bride || groom ) {
+        finalSlug = `${bride}-y-${groom}`
+        .toLowerCase()
+        .replace(/ñ/g, "n")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-_]/g, '');
+    }
+
     try {
         weddingAdded = await req.app.locals.db.collection('weddings').insertOne({
             ownerId: new ObjectId(ownerId),
-            slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/ñ/g, "n").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''),
+            slug: finalSlug,
 
             brideName,
             groomName,
@@ -84,6 +98,7 @@ router.get('/show-invite/:weddingSlug', async (req, res) => {
     let status;
     let message;
     let wedding;
+
 
     try {
         wedding = await req.app.locals.db.collection('weddings').findOne({ slug: weddingSlug });
@@ -127,6 +142,20 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
     const { userId, brideName, groomName, eventDate, ceremony, reception, design } = req.body;
     console.log('userId recibido:', userId);
 
+    const bride = (brideName || "").trim();
+    const groom = (groomName || "").trim();
+    let finalSlug = 'nombre-novia-y-nombre-novio'
+
+    if (bride || groom ) {
+        finalSlug = `${bride}-y-${groom}`
+        .toLowerCase()
+        .replace(/ñ/g, "n")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-_]/g, '');
+    }
+
     let status;
     let message;
     let weddingUpdated;
@@ -143,7 +172,7 @@ router.put('/editar-boda/:weddingId', async (req, res) => {
                 { _id: new ObjectId(weddingId) },
                 {
                     $set: {
-                        slug: `${brideName}-y-${groomName}`.toLowerCase().replace(/ñ/g, "n").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''),
+                        slug: finalSlug,
                         brideName,
                         groomName,
                         eventDate,
