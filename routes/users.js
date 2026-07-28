@@ -112,7 +112,7 @@ router.put('/update-user/:userId', async (req, res) => {
     } else {
         try {
             const findUser = await req.app.locals.db.collection('users').findOne({ _id: new ObjectId(userId) });
-            
+
             if (!findUser) {
                 status = false;
                 message = "El usuario especificado no existe";
@@ -142,14 +142,14 @@ router.put('/update-user/:userId', async (req, res) => {
                     };
                 } else {
                     const userDataChange = await req.app.locals.db.collection('users').updateOne(
-                        { _id: new ObjectId(userId) }, 
+                        { _id: new ObjectId(userId) },
                         { $set: updateFields }
                     );
 
                     if (userDataChange && userDataChange.modifiedCount > 0) {
                         message = "Datos de perfil actualizados con éxito";
                         status = true;
-                        
+
                         updateData = {
                             fullName: updateFields.fullName || findUser.fullName,
                             email: updateFields.email || findUser.email
@@ -176,6 +176,41 @@ router.put('/update-user/:userId', async (req, res) => {
     res.send({ updateData, status, message });
 });
 
+router.delete('/delete-account/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    let message;
+    let status;
+
+    try {
+        const findUser = await req.app.locals.db.collection('users').findOne({ _id: new ObjectId(userId) });
+
+        if (!findUser) {
+            message = "Este usuario no existe o ya ha sido eliminado"
+            status = false;
+        } else {
+            const ownWeddings = await req.app.locals.db.collection('weddings').find({ ownerId: new ObjectId(userId) }).toArray();
+            const weddingIds = ownWeddings.map(w => w._id);
+            //delete collabs de bodas propias
+            await req.app.locals.db.collection('collabs').deleteMany({ weddingId: { $in: weddingIds } });
+            //deleteWeddings
+            await req.app.locals.db.collection('weddings').deleteMany({ ownerId: new ObjectId(userId) });
+            //deleteCollabs
+            await req.app.locals.db.collection('collabs').deleteMany({ userId: new ObjectId(userId) });
+            //deleteUser
+            await req.app.locals.db.collection('users').deleteOne({ _id: new ObjectId(userId) });
+
+
+            message = "Cuenta eliminada correctamente";
+            status = true;
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+
+    res.send({message, status})
+})
 
 
 export default router;
